@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Model\Subject;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use DB;
 
 
-class SclassController extends Controller
+class SubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +17,11 @@ class SclassController extends Controller
      */
     public function index()
     {
-        $sclass = DB::table('sclasses')->get();
-        return response()->json($sclass);
+        $subject = Subject::all();
+        return response()->json($subject);
     }
 
- 
+
 
     /**
      * Store a newly created resource in storage.
@@ -31,13 +32,13 @@ class SclassController extends Controller
     public function store(Request $request)
     {
         $validateData = $request->validate([
-            'class_name' => 'required|unique:sclasses|max:25'
+            'class_id' => 'required',
+            'subject_name' => 'required|unique:subjects|max:25',
+            'subject_code' => 'required|unique:subjects|max:25'
         ]);
-        
-        $data = array();
-        $data['class_name'] = $request->class_name;
-        $insert = DB::table('sclasses')->insert($data);
-        return response('Inserted Succesfully');
+
+        $subject = Subject::create($request->all());
+        return response('Subject Inserted successfully');
     }
 
     /**
@@ -48,8 +49,8 @@ class SclassController extends Controller
      */
     public function show($id)
     {
-        $show = DB::table('sclasses')->where('id',$id)->first();
-        return response()->json($show);
+        $sub = Subject::findorfail($id);
+        return response()->json($sub);
     }
 
 
@@ -63,10 +64,9 @@ class SclassController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = array();
-        $data['class_name'] = $request->class_name;
-        $insert = DB::table('sclasses')->where('id', $id)->update($data);
-        return response('Updated Succesfully');
+        $subject = Subject::findorfail($id);
+        $subject->update($request->all());
+        return response('Updated');
     }
 
     /**
@@ -77,7 +77,7 @@ class SclassController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('sclasses')->where('id',$id)->delete();
+        Subject::where('id',$id)->delete();
         return response('Deleted');
     }
 }
