@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Model\Subject;
+use App\Model\Section;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-
-class SubjectController extends Controller
+class SectionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,10 +15,9 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        $subject = Subject::all();
-        return response()->json($subject);
+        $section = Section::all();
+        return response()->json($section);
     }
-
 
 
     /**
@@ -32,12 +30,11 @@ class SubjectController extends Controller
     {
         $validateData = $request->validate([
             'class_id' => 'required',
-            'subject_name' => 'required|unique:subjects|max:25',
-            'subject_code' => 'required|unique:subjects|max:25'
+            'section_name' => 'required',
         ]);
 
-        $subject = Subject::create($request->all());
-        return response('Subject Inserted successfully');
+        $section = Section::create($request->all());
+        return response('section Inserted successfully');
     }
 
     /**
@@ -48,10 +45,9 @@ class SubjectController extends Controller
      */
     public function show($id)
     {
-        $sub = Subject::findorfail($id);
-        return response()->json($sub);
+        $sec = Section::findorfail($id);
+        return response()->json($sec);
     }
-
 
 
     /**
@@ -63,8 +59,8 @@ class SubjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $subject = Subject::findorfail($id);
-        $subject->update($request->all());
+        $section = Section::findorfail($id);
+        $section->update($request->all());
         return response('Updated');
     }
 
@@ -76,7 +72,7 @@ class SubjectController extends Controller
      */
     public function destroy($id)
     {
-        Subject::where('id',$id)->delete();
+        Section::where('id',$id)->delete();
         return response('Deleted');
     }
 }
